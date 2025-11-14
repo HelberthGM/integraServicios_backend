@@ -3,22 +3,23 @@ package com.lazarus.resources.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
-import java.util.Map;
 
 @Entity
 @Table(name = "resource")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Resource {
 
+    
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     private String code;
     private String name;
 
-    @Column(columnDefinition = "jsonb")
-    private Map<String, Object> attributes;
+    @Column(name = "attributes", columnDefinition = "jsonb")
+    private String attributesJson; // JSON en texto; se puede parsear en controller/servicio
 
     private String photoUrl;
 

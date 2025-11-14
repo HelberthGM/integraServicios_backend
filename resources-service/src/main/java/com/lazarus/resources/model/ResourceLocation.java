@@ -11,7 +11,8 @@ import java.util.List;
 public class ResourceLocation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     private String name;
@@ -23,6 +24,6 @@ public class ResourceLocation {
     @Column(columnDefinition = "text")
     private String description;
 
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<Resource> resources;
 }

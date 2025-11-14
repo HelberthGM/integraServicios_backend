@@ -11,7 +11,8 @@ import java.time.LocalTime;
 public class ResourceTypeAvailability {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     private Integer weekday;

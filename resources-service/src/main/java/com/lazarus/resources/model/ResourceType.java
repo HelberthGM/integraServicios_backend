@@ -11,7 +11,8 @@ import java.util.List;
 public class ResourceType {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     private String unitCode;
@@ -23,9 +24,9 @@ public class ResourceType {
 
     private Integer minGranularityMinutes;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
     private List<Resource> resources;
 
-    @OneToMany(mappedBy = "resourceType")
+    @OneToMany(mappedBy = "resourceType", cascade = CascadeType.ALL)
     private List<ResourceTypeAvailability> availability;
 }
