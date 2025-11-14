@@ -13,3 +13,5 @@ public class ResourcesServiceApplication {
 	}
 
 }
+
+// to init do ./gradlew bootRun

@@ -22,7 +22,7 @@ public class ResourceTypeAvailability {
 
     private Boolean isOpen;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_type_id")
     private ResourceType resourceType;
 }

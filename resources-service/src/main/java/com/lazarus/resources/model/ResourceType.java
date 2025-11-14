@@ -27,6 +27,6 @@ public class ResourceType {
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
     private List<Resource> resources;
 
-    @OneToMany(mappedBy = "resourceType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resourceType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResourceTypeAvailability> availability;
 }
