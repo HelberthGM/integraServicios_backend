@@ -10,4 +10,5 @@ public interface ResourceTypeAvailabilityService {
     ResourceTypeAvailability create(ResourceTypeAvailability availability);
     ResourceTypeAvailability update(UUID id, ResourceTypeAvailability availability);
     void delete(UUID id);
+    List<ResourceTypeAvailability> findByResourceTypeId(UUID resourceTypeId);
 }

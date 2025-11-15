@@ -37,20 +37,26 @@ public class ResourceTypeAvailabilityServiceImpl implements ResourceTypeAvailabi
     @SuppressWarnings("null")
     @Override
     public ResourceTypeAvailability update(UUID id, ResourceTypeAvailability availability) {
-        return repo.findById(id).map(a -> {
-            a.setWeekday(availability.getWeekday());
-            a.setStartTime(availability.getStartTime());
-            a.setEndTime(availability.getEndTime());
-            a.setIsOpen(availability.getIsOpen());
-            a.setResourceType(availability.getResourceType());
-            return repo.save(a);
+        return repo.findById(id).map(existing -> {
+            existing.setWeekday(availability.getWeekday());
+            existing.setStartTime(availability.getStartTime());
+            existing.setEndTime(availability.getEndTime());
+            existing.setIsOpen(availability.getIsOpen());
+            existing.setResourceType(availability.getResourceType());
+            return repo.save(existing);
         }).orElse(null);
     }
+
 
     @SuppressWarnings("null")
     @Override
     public void delete(UUID id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public List<ResourceTypeAvailability> findByResourceTypeId(UUID resourceTypeId) {
+        return repo.findByResourceType_Id(resourceTypeId);
     }
 }
 
