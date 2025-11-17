@@ -1,6 +1,6 @@
 package com.lazarus.resources.dto.resource;
 
-import com.lazarus.resources.dto.location.ResourceLocationDTO;
+import com.lazarus.resources.dto.location.ResourceLocationResponseDTO;
 import com.lazarus.resources.dto.type.ResourceTypeResponseDTO;
 
 import java.util.UUID;
@@ -13,6 +13,6 @@ public record ResourceResponseDTO(
         Map<String, Object> attributesJson,
         String photoUrl,
         Boolean active,
-        ResourceLocationDTO location,
+        ResourceLocationResponseDTO location,
         ResourceTypeResponseDTO type
 ) {}

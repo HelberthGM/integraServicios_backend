@@ -8,5 +8,6 @@ public record ResourceTypeAvailabilityResponseDTO(
         Integer weekday,
         LocalTime startTime,
         LocalTime endTime,
-        Boolean isOpen
+        Boolean isOpen,
+        ResourceTypeResponseDTO resourceType
 ) {}
