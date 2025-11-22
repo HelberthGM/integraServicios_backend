@@ -1,87 +1,50 @@
 package com.lazarus.resources.controller;
 
-import com.lazarus.resources.model.Resource;
+import com.lazarus.resources.dto.resource.ResourceRequestDTO;
+import com.lazarus.resources.dto.resource.ResourceResponseDTO;
 import com.lazarus.resources.service.ResourceService;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/resources")
+@RequestMapping("/api/resources")
+@RequiredArgsConstructor
 public class ResourceController {
 
-    private final ResourceService service;
+    private final ResourceService resourceService;
 
-    public ResourceController(ResourceService service) {
-        this.service = service;
-    }
-
-    // --------------------------------------------------------
-    // GET /resources
-    // --------------------------------------------------------
     @GetMapping
-    public ResponseEntity<List<Resource>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<ResourceResponseDTO>> getAll() {
+        return ResponseEntity.ok(resourceService.findAll());
     }
 
-    // --------------------------------------------------------
-    // GET /resources/{id}
-    // --------------------------------------------------------
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> getById(@PathVariable UUID id) {
-        Resource resource = service.findById(id);
-
-        if (resource == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(resource);
+    public ResponseEntity<ResourceResponseDTO> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(resourceService.findById(id));
     }
 
-    // --------------------------------------------------------
-    // POST /resources
-    // --------------------------------------------------------
-    @SuppressWarnings("null")
     @PostMapping
-    public ResponseEntity<Resource> create(@RequestBody Resource resource) {
-        Resource created = service.create(resource);
-
-        return ResponseEntity
-                .created(URI.create("/resources/" + created.getId()))
-                .body(created);
+    public ResponseEntity<ResourceResponseDTO> create(@RequestBody ResourceRequestDTO dto) {
+        return ResponseEntity.ok(resourceService.create(dto));
     }
 
-    // --------------------------------------------------------
-    // PUT /resources/{id}
-    // --------------------------------------------------------
     @PutMapping("/{id}")
-    public ResponseEntity<Resource> update(
+    public ResponseEntity<ResourceResponseDTO> update(
             @PathVariable UUID id,
-            @RequestBody Resource resource
+            @RequestBody ResourceRequestDTO dto
     ) {
-        Resource updated = service.update(id, resource);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(resourceService.update(id, dto));
     }
 
-    // --------------------------------------------------------
-    // DELETE /resources/{id}
-    // --------------------------------------------------------
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        try {
-            service.delete(id);
-            return ResponseEntity.noContent().build(); // 204
-        } catch (RuntimeException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        resourceService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
-

@@ -1,14 +1,13 @@
 package com.lazarus.resources.service.impl;
 
+import com.lazarus.resources.dto.resource.ResourceRequestDTO;
+import com.lazarus.resources.dto.resource.ResourceResponseDTO;
+import com.lazarus.resources.mapper.ResourceMapper;
+import com.lazarus.resources.model.Resource;
+import com.lazarus.resources.repository.ResourceRepository;
 import com.lazarus.resources.service.ResourceService;
 
 import lombok.RequiredArgsConstructor;
-
-import com.lazarus.resources.repository.ResourceLocationRepository;
-import com.lazarus.resources.repository.ResourceRepository;
-import com.lazarus.resources.repository.ResourceTypeRepository;
-import com.lazarus.resources.model.Resource;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,60 +17,68 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ResourceServiceImpl implements ResourceService {
 
-    private final ResourceRepository repo;
-    private final ResourceLocationRepository locationRepository;
-    private final ResourceTypeRepository resourceTypeRepository;
+    private final ResourceRepository resourceRepository;
+    private final ResourceMapper resourceMapper;
 
+    // -----------------------------------------
+    // GET ALL
+    // -----------------------------------------
     @Override
-    public List<Resource> findAll() {
-        return repo.findAll();
+    public List<ResourceResponseDTO> findAll() {
+        return resourceRepository.findAll().stream()
+                .map(resourceMapper::toDTO)
+                .toList();
     }
 
+    // -----------------------------------------
+    // GET BY ID
+    // -----------------------------------------
     @SuppressWarnings("null")
     @Override
-    public Resource findById(UUID id) {
-        return repo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Recurso no encontrado con ID: " + id));
+    public ResourceResponseDTO findById(UUID id) {
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found"));
+
+        return resourceMapper.toDTO(resource);
     }
 
+    // -----------------------------------------
+    // CREATE
+    // -----------------------------------------
     @SuppressWarnings("null")
     @Override
-    public Resource create(Resource resource) {
-        if (resource == null) {
-            throw new IllegalArgumentException("El recurso no puede ser nulo");
-        }
-        
-        try {
-            resource.setLocation(locationRepository.getReferenceById(
-                    resource.getLocation().getId()
-            ));
-
-            resource.setType(resourceTypeRepository.getReferenceById(
-                    resource.getType().getId()
-            ));
-
-            return repo.save(resource);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear el recurso: " + e.getMessage(), e);
-        }
+    public ResourceResponseDTO create(ResourceRequestDTO dto) {
+        Resource entity = resourceMapper.toEntity(dto);
+        Resource saved = resourceRepository.save(entity);
+        return resourceMapper.toDTO(saved);
     }
 
+    // -----------------------------------------
+    // UPDATE
+    // -----------------------------------------
     @SuppressWarnings("null")
     @Override
-    public Resource update(UUID id, Resource resource) {
-        return repo.findById(id).map(existing -> {
-            existing.setName(resource.getName());
-            existing.setCode(resource.getCode());
-            existing.setAttributesJson(resource.getAttributesJson());
-            existing.setPhotoUrl(resource.getPhotoUrl());
-            existing.setActive(resource.getActive());
-            return repo.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Recurso no encontrado con ID: " + id));
+    public ResourceResponseDTO update(UUID id, ResourceRequestDTO dto) {
+        Resource existing = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found"));
+
+        Resource updated = resourceMapper.toEntity(dto);
+        updated.setId(existing.getId());
+
+        Resource saved = resourceRepository.save(updated);
+        return resourceMapper.toDTO(saved);
     }
 
+    // -----------------------------------------
+    // DELETE
+    // -----------------------------------------
     @SuppressWarnings("null")
     @Override
     public void delete(UUID id) {
-        repo.deleteById(id);
+        if (!resourceRepository.existsById(id)) {
+            throw new RuntimeException("Resource not found");
+        }
+        resourceRepository.deleteById(id);
     }
 }
+
