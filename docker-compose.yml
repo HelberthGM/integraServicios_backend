@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+
+  # ----------- Bases de datos -----------
+  resources-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: recursos_bd
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - resources_data:/var/lib/postgresql/data
+    networks:
+      - net
+    ports:
+      - "5433:5432"
+
+  reviews-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: rating_bd
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - reviews_data:/var/lib/postgresql/data
+    networks:
+      - net
+    ports:
+      - "5434:5432"
+
+  # ----------- Eureka -----------
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - net
+
+  # ----------- Microservicios -----------
+  resources-service:
+    build: ./resources-service
+    depends_on:
+      - resources-db
+      - eureka-server
+    environment:
+      DB_USER: admin
+      DB_PASS: admin123
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8081:8081"
+    networks:
+      - net
+
+  reviews-service:
+    build: ./reviews-service
+    depends_on:
+      - reviews-db
+      - eureka-server
+      - resources-service
+    environment:
+      DB_USER_REV: admin
+      DB_PASS_REV: admin123
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8082:8082"
+    networks:
+      - net
+
+volumes:
+  resources_data:
+  reviews_data:
+
+networks:
+  net:
+    driver: bridge
