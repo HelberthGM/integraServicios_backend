@@ -28,6 +28,9 @@ public class RatingServiceImpl implements RatingService {
 
         // Validar que el recurso exista en el otro microservicio
         try {
+            validateRatingValues(request);       // valores 0.0–5.0 e incrementos
+            //validateResourceIsReturned(request); // el recurso debe estar devuelto
+            validateNotDuplicate(request);       // no doble calificación
             resourceClient.getResourceById(request.getReservationId().toString());
         } catch (FeignException.NotFound e) {
             throw new ResourceNotFoundException("Resource with ID " + request.getReservationId() + " does not exist");
@@ -112,5 +115,33 @@ public class RatingServiceImpl implements RatingService {
 
         return RatingMapper.toResponse(rating);
     }
+
+    private void validateRatingValues(CreateRatingRequest req) {
+
+        double[] values = { req.getServiceCompliance(), req.getResourceCondition(), req.getStaffKindness() };
+
+        for (double v : values) {
+
+            if (v < 0.0 || v > 5.0) {
+                throw new IllegalArgumentException("Rating values must be between 0.0 and 5.0");
+            }
+
+            if (!isStepValid(v)) {
+                throw new IllegalArgumentException("Rating values must increase in steps of 0.1");
+            }
+        }
+    }
+
+    private boolean isStepValid(double v) {
+        return Math.abs(v * 10 - Math.round(v * 10)) < 0.000001;
+    }
+
+    private void validateNotDuplicate(CreateRatingRequest req) {
+    boolean exists = ratingRepository.existsByReservationId(req.getReservationId());
+
+    if (exists) {
+        throw new IllegalStateException("Resource has already been rated");
+    }
+}
 
 }

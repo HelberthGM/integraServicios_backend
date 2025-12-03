@@ -1,8 +1,13 @@
 package com.lazarus.reviews.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateRatingRequest {
 
     @NotNull(message = "reservationId is required")
