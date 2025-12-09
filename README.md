@@ -29,6 +29,28 @@ Cada microservicio es **independiente**, posee su propia base de datos y se regi
 > 🔹 Cada microservicio incluye controladores REST, servicios, repositorios, manejo de migraciones con Flyway y conexión a su propia base de datos SQL.
 
 ---
+## 🧩​ Endpoints
+### Endpoints de Ratings
+
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| /ratings | POST | Crear rating |
+| /ratings/{id} | GET | Traer rating por ID |
+| /ratings/reservation/{reservationId} | GET | Traer rating por reservationId |
+| /ratings/{id} | PUT | Actualizar rating |
+| /ratings/{id} | DELETE | Borrar rating |
+| /ratings/average | GET | Promedio global |
+| /ratings/average/{reservationId} | GET | Promedio por reservationId |
+
+### Endpoints de Resources
+
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| /api/resources | GET | Obtener todos los recursos |
+| /api/resources/{id} | GET | Obtener recurso por ID |
+| /api/resources | POST | Crear un nuevo recurso |
+| /api/resources/{id} | PUT | Actualizar recurso existente |
+| /api/resources/{id} | DELETE | Eliminar recurso por ID |
 
 ## 🧰 Tecnologías utilizadas
 
