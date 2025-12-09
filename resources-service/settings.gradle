@@ -1,1 +1,17 @@
+
+
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+	}
+}
+
+dependencyResolutionManagement {
+	repositories {
+		mavenCentral()
+		maven { url 'https://repo.adoptium.net/artifactory/jdk' }
+	}
+}
+
 rootProject.name = 'resources-service'
