@@ -12,8 +12,10 @@ import com.lazarus.reviews.client.ResourceClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -142,6 +144,12 @@ public class RatingServiceImpl implements RatingService {
     if (exists) {
         throw new IllegalStateException("Resource has already been rated");
     }
-}
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Rating> getAllRatings() {
+        return ratingRepository.findAll();
+    }
 
 }

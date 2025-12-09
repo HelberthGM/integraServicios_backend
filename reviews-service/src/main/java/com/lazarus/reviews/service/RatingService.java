@@ -3,7 +3,9 @@ package com.lazarus.reviews.service;
 import com.lazarus.reviews.dto.CreateRatingRequest;
 import com.lazarus.reviews.dto.RatingResponse;
 import com.lazarus.reviews.dto.UpdateRatingRequest;
+import com.lazarus.reviews.model.Rating;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface RatingService {
@@ -23,4 +25,6 @@ public interface RatingService {
     boolean existsByReservationId(UUID reservationId);
     
     RatingResponse getRatingByReservationId(UUID reservationId);
+
+    List<Rating> getAllRatings();
 }

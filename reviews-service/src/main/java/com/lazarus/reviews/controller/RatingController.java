@@ -3,6 +3,7 @@ package com.lazarus.reviews.controller;
 import com.lazarus.reviews.dto.CreateRatingRequest;
 import com.lazarus.reviews.dto.RatingResponse;
 import com.lazarus.reviews.dto.UpdateRatingRequest;
+import com.lazarus.reviews.model.Rating;
 import com.lazarus.reviews.service.RatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -69,5 +71,11 @@ public class RatingController {
     @GetMapping("/average/{reservationId}")
     public ResponseEntity<Double> getAverageByReservation(@PathVariable UUID reservationId) {
         return ResponseEntity.ok(ratingService.getAverageForReservation(reservationId)); // 200 OK
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<Rating>> getAllRatings() {
+        List<Rating> ratings = ratingService.getAllRatings();
+        return ResponseEntity.ok(ratings);
     }
 }
