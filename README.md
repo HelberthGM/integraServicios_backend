@@ -52,6 +52,14 @@ Cada microservicio es **independiente**, posee su propia base de datos y se regi
 | /api/resources/{id} | PUT | Actualizar recurso existente |
 | /api/resources/{id} | DELETE | Eliminar recurso por ID |
 
+### endpoint loan
+| Endpoint                                    | Función             |
+| ------------------------------------------- | ------------------- |
+| `POST /loans`                               | Crear un préstamo   |
+| `GET /loans`                                | Listar todos        |
+| `GET /loans/{id}`                           | Obtener por ID      |
+| `GET /loans/by-reservation/{reservationId}` | Obtener por reserva |
+
 ## 🧰 Tecnologías utilizadas
 
 | Tipo                                      | Herramienta                               |
