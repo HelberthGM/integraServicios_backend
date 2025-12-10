@@ -2,6 +2,7 @@ package com.lazarus.loan.controller;
 
 import com.lazarus.loan.dto.CreateLoanRequest;
 import com.lazarus.loan.dto.LoanResponse;
+import com.lazarus.loan.model.Loan;
 import com.lazarus.loan.repository.LoanRepository;
 import com.lazarus.loan.service.LoanService;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,15 @@ public class LoanController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
 
+     @PutMapping("/{id}")
+    public ResponseEntity<Loan> update(@PathVariable UUID id, @RequestBody Loan loan) {
+        return ResponseEntity.ok(service.update(id, loan));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
